@@ -1,6 +1,7 @@
 document.addEventListener("alpine:init", () => {
   const cache = {};
   const cacheTimers = {};
+  const CACHE_TIMEOUT_DURATION = 2 * 60 * 1000; // 2 minutes
 
   const router = (event) => {
     event = event || window.event;
@@ -39,7 +40,7 @@ document.addEventListener("alpine:init", () => {
     cacheTimers[path] = setTimeout(() => {
       delete cache[path];
       delete cacheTimers[path];
-    }, 2 * 60 * 1000); // 2 minutes
+    }, CACHE_TIMEOUT_DURATION);
   };
 
   const resetCacheTimer = (path) => {
