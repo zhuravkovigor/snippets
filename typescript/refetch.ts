@@ -1,5 +1,9 @@
 import axios, { AxiosRequestConfig, AxiosResponse } from "axios";
 
+function delay(ms: number): Promise<void> {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
 async function refetch(
   config: AxiosRequestConfig,
   retries: number = 3
@@ -14,6 +18,7 @@ async function refetch(
       if (attempt === retries - 1) {
         throw error;
       }
+      await delay((attempt + 1) * 1000); // Delay increases with each retry
     }
   }
 
