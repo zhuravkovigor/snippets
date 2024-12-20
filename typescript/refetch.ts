@@ -4,16 +4,16 @@ function delay(ms: number): Promise<void> {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
-async function refetch(
+async function refetch<T>(
   config: AxiosRequestConfig,
   retries: number = 3
-): Promise<AxiosResponse> {
-  let response: AxiosResponse;
+): Promise<T> {
+  let response: AxiosResponse<T>;
 
   for (let attempt = 0; attempt < retries; attempt++) {
     try {
-      response = await axios(config);
-      return response;
+      response = await axios<T>(config);
+      return response.data;
     } catch (error) {
       if (attempt === retries - 1) {
         throw error;
@@ -26,3 +26,28 @@ async function refetch(
 }
 
 export default refetch;
+
+// Define the type for the response data
+interface Post {
+  userId: number;
+  id: number;
+  title: string;
+  body: string;
+}
+
+// Example usage of the refetch function with JSONPlaceholder
+async function fetchData() {
+  const config: AxiosRequestConfig = {
+    url: "https://jsonplaceholder.typicode.com/posts/1",
+    method: "GET",
+  };
+
+  try {
+    const data = await refetch<Post>(config);
+    console.log("Data:", data);
+  } catch (error) {
+    console.error("Error fetching data:", error);
+  }
+}
+
+fetchData();
