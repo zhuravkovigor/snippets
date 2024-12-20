@@ -1,10 +1,6 @@
 import axios, { AxiosRequestConfig, AxiosResponse } from "axios";
 
-function delay(ms: number): Promise<void> {
-  return new Promise((resolve) => setTimeout(resolve, ms));
-}
-
-async function refetch<T>(
+export async function refetch<T>(
   config: AxiosRequestConfig,
   retries: number = 3
 ): Promise<T> {

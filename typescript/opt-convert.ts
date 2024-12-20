@@ -3,7 +3,7 @@ type ConvertOptions<T> = {
   valueKey: keyof T;
 };
 
-function convertArrayToLabelValue<T>(
+export function convertArrayToLabelValue<T>(
   array: T[],
   options: ConvertOptions<T>
 ): { label: string; value: string }[] {
