@@ -56,4 +56,5 @@ document.addEventListener("alpine:init", () => {
 
 // example use
 // <a href="/" onclick="router()">Home</a>
-/* <a href="/about" onclick="router()">About</a> */
+// <a href="/about" onclick="router()">About</a> //
+// <div id="content">...</div>
