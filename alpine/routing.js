@@ -18,9 +18,11 @@ document.addEventListener("alpine:init", () => {
 
   const handleLocation = async () => {
     const path = window.location.pathname;
+    const queryParams = new URLSearchParams(window.location.search);
     const route = routes[path] || routes[404];
 
     Alpine.store("pageName", path);
+    Alpine.store("queryParams", Object.fromEntries(queryParams.entries()));
 
     if (cache[path]) {
       document.getElementById("content").innerHTML = cache[path];
