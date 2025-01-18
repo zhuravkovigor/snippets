@@ -13,16 +13,23 @@ document.addEventListener("alpine:init", () => {
 
   const routes = {
     "/": "/pages/index.html",
+    "/post/:id": "/pages/post.html", // Define a route for posts
     404: "/pages/error.html",
   };
 
   const handleLocation = async () => {
     const path = window.location.pathname;
     const queryParams = new URLSearchParams(window.location.search);
-    const route = routes[path] || routes[404];
+    const route = matchRoute(path) || routes[404];
 
     Alpine.store("pageName", path);
     Alpine.store("queryParams", Object.fromEntries(queryParams.entries()));
+
+    // Extract parameters if the route matches
+    const params = extractParams(path);
+    if (params) {
+      Alpine.store("params", params);
+    }
 
     if (cache[path]) {
       document.getElementById("content").innerHTML = cache[path];
@@ -33,6 +40,34 @@ document.addEventListener("alpine:init", () => {
       document.getElementById("content").innerHTML = html;
       setCacheTimer(path);
     }
+  };
+
+  const matchRoute = (path) => {
+    for (const route in routes) {
+      const regex = new RegExp(route.replace(/:\w+/g, '(\\w+)'));
+      if (regex.test(path)) {
+        return route;
+      }
+    }
+    return null;
+  };
+
+  const extractParams = (path) => {
+    const params = {};
+    for (const route in routes) {
+      const regex = new RegExp(route.replace(/:\w+/g, '(\\w+)'));
+      const match = path.match(regex);
+      if (match) {
+        const keys = route.match(/:(\w+)/g);
+        if (keys) {
+          keys.forEach((key, index) => {
+            params[key.substring(1)] = match[index + 1]; // Remove ':' from key
+          });
+        }
+        return params;
+      }
+    }
+    return null;
   };
 
   const setCacheTimer = (path) => {
